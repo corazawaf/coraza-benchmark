@@ -1,0 +1,23 @@
+name: Simple JSON
+description: Simple JSON
+request:
+  method: POST
+  path: /this/is?some=query&string=here
+  headers:
+    Host: www.example.com
+    Content-Type: application/json
+    Accept: text/plain
+    Accept-Encoding: gzip
+    Accept-Language: en-US
+    Accept-Charset: utf-8
+    Connection: keep-alive
+    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/20100101 Firefox/11.0
+    Content-Length: 871
+  body: |
+    [{"_id":"61e198117939b22990872f50","index":0,"guid":"947ccbbe-3edd-4670-b354-fb152d89c7a0","isActive":true,"balance":"$2,235.80","picture":"http://placehold.it/32x32","age":26,"eyeColor":"brown","name":"William Buchanan","gender":"male","company":"CUJO","email":"williambuchanan@cujo.com","phone":"+1 (928) 511-2778","address":"639 Gelston Avenue, Chalfant, Kentucky, 8091","about":"Velit officia mollit est nulla officia consequat. Voluptate in deserunt fugiat mollit irure. Elit nisi id cupidatat proident tempor in.\r\n","registered":"2020-06-10T05:11:56 +04:00","latitude":-30.784033,"longitude":-114.568833,"tags":["nulla","aliqua","laboris","minim","eu","irure","esse"],"friends":[{"id":0,"name":"Dora Kerr"},{"id":1,"name":"Valarie Moody"},{"id":2,"name":"Beverley Wade"}],"greeting":"Hello, William Buchanan! You have 5 unread messages.","favoriteFruit":"apple"}]
+response:
+  status: 200
+  status_msg: OK
+  body: OK
+  headers:
+    content-length: 2

@@ -1,0 +1,23 @@
+name: Simple URlencoded
+description: Simple URlencoded
+request:
+  method: POST
+  path: /this/is?some=query&string=here
+  headers:
+    Host: www.example.com
+    Content-Type: application/x-www-form-urlencoded
+    Accept: text/plain
+    Accept-Encoding: gzip
+    Accept-Language: en-US
+    Accept-Charset: utf-8
+    Connection: keep-alive
+    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/20100101 Firefox/11.0
+    Content-Length: 22
+  body:
+    some=query&string=here
+response:
+  status: 200
+  status_msg: OK
+  body: OK
+  headers:
+    content-length: 2

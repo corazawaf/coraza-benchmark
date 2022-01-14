@@ -1,0 +1,23 @@
+name: Simple XML
+description: Simple XML
+request:
+  method: POST
+  path: /this/is?some=query&string=here
+  headers:
+    Host: www.example.com
+    Content-Type: text/xml
+    Accept: text/plain
+    Accept-Encoding: gzip
+    Accept-Language: en-US
+    Accept-Charset: utf-8
+    Connection: keep-alive
+    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/20100101 Firefox/11.0
+    Content-Length: 491
+  body: |
+    <root><hunter><anything>958793207</anything><farmer>883702922</farmer><happen>-789560722.5206528</happen><finest>-1295774901</finest><labor><farm>-1949602812</farm><breeze>information</breeze><sky>scientific</sky><older>-1083272571.1748672</older><sleep>695999902</sleep><proper>-1555505234.6537414</proper></labor><camera>470318547</camera></hunter><throughout>-1244708072</throughout><universe>corner</universe><right>-1190199709</right><fought>240924851</fought><win>airplane</win></root>
+response:
+  status: 200
+  status_msg: OK
+  body: OK
+  headers:
+    content-length: 2

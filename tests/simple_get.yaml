@@ -1,0 +1,20 @@
+name: Simple GET
+description: Simple GET
+request:
+  method: GET
+  path: /this/is?some=query&string=here
+  headers:
+    Host: www.example.com
+    Accept: text/plain
+    Accept-Encoding: gzip
+    Accept-Language: en-US
+    Accept-Charset: utf-8
+    Connection: keep-alive
+    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/20100101 Firefox/11.0
+    X-Forwarded-For:
+response:
+  status: 200
+  status_msg: OK
+  body: OK
+  headers:
+    content-length: 2

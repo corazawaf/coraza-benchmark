@@ -43,7 +43,7 @@ func main() {
 		m.Total/uint64(1000000000))
 	fmt.Printf("Workers: %d\nCount: %d\n", workers, cases)
 	csv := [][]string{
-		{"Engine", "Case", "p1", "p2", "p3", "p4", "p5", "Overall"},
+		{"Engine", "Case", "p1", "p2", "p3", "p4", "p5", "Overall", "Overall (human readable)"},
 	}
 	var wg sync.WaitGroup
 	if profiling {
@@ -120,6 +120,7 @@ func main() {
 				fmt.Sprintf("%.3f", float64(dph[3])/1000),
 				fmt.Sprintf("%.3f", float64(dph[4])/1000),
 				fmt.Sprintf("%.3f", float64(timeTaken)/1000),
+				fmt.Sprintf("%.2fs", time.Duration(timeTaken).Seconds()),
 			})
 			fmt.Println("-----")
 		}

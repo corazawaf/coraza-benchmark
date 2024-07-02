@@ -1,11 +1,10 @@
 package main
 
 import (
-	"github.com/jptosso/coraza-waf/v2"
-	"github.com/jptosso/coraza-waf/v2/seclang"
-
-	_ "github.com/jptosso/coraza-libinjection"
-	_ "github.com/jptosso/coraza-pcre"
+	_ "github.com/corazawaf/coraza-benchmark/v2/pcre"
+	"github.com/corazawaf/coraza/v2"
+	"github.com/corazawaf/coraza/v2/seclang"
+	_ "github.com/corazawaf/libinjection-go"
 )
 
 type wafCoraza struct {

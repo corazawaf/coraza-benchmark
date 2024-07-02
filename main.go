@@ -3,10 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	_ "net/http/pprof"
+	"os"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -74,7 +74,7 @@ func main() {
 				}
 			}
 		}
-		testfiles, err := ioutil.ReadDir("./tests")
+		testfiles, err := os.ReadDir("./tests")
 		if err != nil {
 			log.Fatal(err)
 		}

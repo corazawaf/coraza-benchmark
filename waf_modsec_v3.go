@@ -20,12 +20,12 @@ import (
 	"unsafe"
 )
 
-type wafModsec struct {
+type wafModsecV3 struct {
 	waf     *C.modsecurity
 	ruleset *C.RulesSet
 }
 
-func (w *wafModsec) LoadDirectives(path string) error {
+func (w *wafModsecV3) LoadDirectives(path string) error {
 	p := C.CString(path)
 	var err *C.char
 	defer C.free(unsafe.Pointer(p))
@@ -36,23 +36,23 @@ func (w *wafModsec) LoadDirectives(path string) error {
 	return nil
 }
 
-func (w *wafModsec) NewTransaction() transactionIface {
-	return &txModsec{
+func (w *wafModsecV3) NewTransaction() transactionIface {
+	return &txModsecV3{
 		transaction: C.msc_new_transaction(w.waf, w.ruleset, nil),
 	}
 }
 
-func (w *wafModsec) Init() {
+func (w *wafModsecV3) Init() {
 	w.waf = C.msc_init()
 	w.ruleset = C.msc_create_rules_set()
 	C.msc_set_log_cb(w.waf, (*[0]byte)(C.cb))
 }
 
-type txModsec struct {
+type txModsecV3 struct {
 	transaction *C.Transaction
 }
 
-func (tx *txModsec) ProcessConnection(clientAddr string, clientPort int, serverAddr string, serverPort int) {
+func (tx *txModsecV3) ProcessConnection(clientAddr string, clientPort int, serverAddr string, serverPort int) {
 	caddr := C.CString(clientAddr)
 	saddr := C.CString(serverAddr)
 	C.msc_process_connection(tx.transaction, caddr, C.int(clientPort), saddr, C.int(serverPort))
@@ -60,7 +60,7 @@ func (tx *txModsec) ProcessConnection(clientAddr string, clientPort int, serverA
 	C.free(unsafe.Pointer(saddr))
 }
 
-func (tx *txModsec) ProcessURI(method string, uri string, httpVersion string) {
+func (tx *txModsecV3) ProcessURI(method string, uri string, httpVersion string) {
 	cm := C.CString(method)
 	cu := C.CString(uri)
 	cv := C.CString(httpVersion)
@@ -70,7 +70,7 @@ func (tx *txModsec) ProcessURI(method string, uri string, httpVersion string) {
 	C.free(unsafe.Pointer(cv))
 }
 
-func (tx *txModsec) AddRequestHeader(name string, value string) {
+func (tx *txModsecV3) AddRequestHeader(name string, value string) {
 	if name == "" || value == "" {
 		return
 	}
@@ -79,47 +79,47 @@ func (tx *txModsec) AddRequestHeader(name string, value string) {
 	C.msc_add_request_header(tx.transaction, (*C.uchar)(&cn[0]), (*C.uchar)(&cv[0]))
 }
 
-func (tx *txModsec) ProcessRequestHeaders() {
+func (tx *txModsecV3) ProcessRequestHeaders() {
 	C.msc_process_request_headers(tx.transaction)
 }
 
-func (tx *txModsec) AppendToRequestBody(data []byte) {
+func (tx *txModsecV3) AppendToRequestBody(data []byte) {
 	if len(data) == 0 {
 		return
 	}
 	C.msc_append_request_body(tx.transaction, (*C.uchar)(&data[0]), C.size_t(len(data)))
 }
 
-func (tx *txModsec) ProcessRequestBody() {
+func (tx *txModsecV3) ProcessRequestBody() {
 	C.msc_process_request_body(tx.transaction)
 }
 
-func (tx *txModsec) AddResponseHeader(name string, value string) {
+func (tx *txModsecV3) AddResponseHeader(name string, value string) {
 	cn := []byte(name)
 	cv := []byte(value)
 	C.msc_add_response_header(tx.transaction, (*C.uchar)(&cn[0]), (*C.uchar)(&cv[0]))
 }
 
-func (tx *txModsec) ProcessResponseHeaders(statusCode int, status string) {
+func (tx *txModsecV3) ProcessResponseHeaders(statusCode int, status string) {
 	st := C.CString(status)
 	C.msc_process_response_headers(tx.transaction, C.int(statusCode), st)
 	C.free(unsafe.Pointer(st))
 }
 
-func (tx *txModsec) AppendToResponseBody(data []byte) {
+func (tx *txModsecV3) AppendToResponseBody(data []byte) {
 	C.msc_append_response_body(tx.transaction, (*C.uchar)(&data[0]), C.size_t(len(data)))
 }
 
-func (tx *txModsec) ProcessResponseBody() {
+func (tx *txModsecV3) ProcessResponseBody() {
 	C.msc_process_response_body(tx.transaction)
 }
 
-func (tx *txModsec) ProcessLogging() {
+func (tx *txModsecV3) ProcessLogging() {
 	C.msc_process_logging(tx.transaction)
 }
 
-func (tx *txModsec) Clean() {
+func (tx *txModsecV3) Clean() {
 	C.msc_transaction_cleanup(tx.transaction)
 }
 
-var _ wafIface = &wafModsec{}
+var _ wafIface = &wafModsecV3{}

@@ -23,6 +23,6 @@ type transactionIface interface {
 }
 
 var wafInterfaces = map[string]wafIface{
-	"coraza": &wafCoraza{},
-	"modsec": &wafModsec{},
+	"coraza_v2": &wafCorazaV2{},
+	"modsec_v3": &wafModsecV3{},
 }

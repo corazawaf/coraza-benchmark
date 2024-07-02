@@ -22,10 +22,12 @@ func main() {
 	var workers, cases int
 	var profiling bool
 	var filterRegex string
+	var rulesPath string
 	flag.IntVar(&workers, "workers", runtime.NumCPU(), "number of workers")
 	flag.IntVar(&cases, "cases", 10000, "number of test cases")
 	flag.BoolVar(&profiling, "profiling", false, "enable profiling on port 8080")
 	flag.StringVar(&filterRegex, "filter", "", "filter test case filename by regex")
+	flag.StringVar(&rulesPath, "rules", "coraza.conf-recommended", "path to rules, can be glob")
 	flag.Parse()
 	var filterRx *regexp.Regexp
 	if filterRegex != "" {
@@ -57,21 +59,14 @@ func main() {
 		fmt.Printf("Running tests for %q engine\n", engine)
 		waf := engineIface
 		engineIface.Init()
-		files := []string{
-			"../coraza-waf/coraza.conf-recommended",
-			"../../../../../projects/coreruleset/crs-setup.conf.example",
-			"../../../../../projects/coreruleset/rules/*.conf",
+		// read the file as a glob
+		g, err := filepath.Glob(rulesPath)
+		if err != nil {
+			panic(err)
 		}
-		for _, f := range files {
-			// read the file as a glob
-			g, err := filepath.Glob(f)
-			if err != nil {
+		for _, file := range g {
+			if err := waf.LoadDirectives(file); err != nil {
 				panic(err)
-			}
-			for _, file := range g {
-				if err := waf.LoadDirectives(file); err != nil {
-					panic(err)
-				}
 			}
 		}
 		testfiles, err := os.ReadDir("./tests")

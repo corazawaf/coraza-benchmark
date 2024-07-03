@@ -1,8 +1,7 @@
 package main
 
 type wafIface interface {
-	Init()
-	LoadDirectives(path string) error
+	Init(rulesPath string) error
 	NewTransaction() transactionIface
 }
 
@@ -24,5 +23,6 @@ type transactionIface interface {
 
 var wafInterfaces = map[string]wafIface{
 	"coraza_v2": &wafCorazaV2{},
+	"coraza_v3": &wafCorazaV3{},
 	"modsec_v3": &wafModsecV3{},
 }

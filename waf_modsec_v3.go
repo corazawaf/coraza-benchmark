@@ -25,7 +25,7 @@ type wafModsecV3 struct {
 	ruleset *C.RulesSet
 }
 
-func (w *wafModsecV3) LoadDirectives(path string) error {
+func (w *wafModsecV3) loadDirectives(path string) error {
 	p := C.CString(path)
 	var err *C.char
 	defer C.free(unsafe.Pointer(p))
@@ -42,10 +42,12 @@ func (w *wafModsecV3) NewTransaction() transactionIface {
 	}
 }
 
-func (w *wafModsecV3) Init() {
+func (w *wafModsecV3) Init(rulesPath string) error {
 	w.waf = C.msc_init()
 	w.ruleset = C.msc_create_rules_set()
 	C.msc_set_log_cb(w.waf, (*[0]byte)(C.cb))
+
+	return w.loadDirectives(rulesPath)
 }
 
 type txModsecV3 struct {

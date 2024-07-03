@@ -3,12 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
 	"path"
-	"path/filepath"
 	"regexp"
 	"runtime"
 	"sync"
@@ -27,14 +25,14 @@ func main() {
 	flag.IntVar(&cases, "cases", 10000, "number of test cases")
 	flag.BoolVar(&profiling, "profiling", false, "enable profiling on port 8080")
 	flag.StringVar(&filterRegex, "filter", "", "filter test case filename by regex")
-	flag.StringVar(&rulesPath, "rules", "coraza.conf-recommended", "path to rules, can be glob")
+	flag.StringVar(&rulesPath, "rules", "coraza.conf-recommended", "path to rules file")
 	flag.Parse()
 	var filterRx *regexp.Regexp
 	if filterRegex != "" {
 		var err error
 		filterRx, err = regexp.Compile(filterRegex)
 		if err != nil {
-			log.Fatal(err)
+			panic(err)
 		}
 	}
 	m, _ := mem.VirtualMemory()
@@ -58,20 +56,13 @@ func main() {
 	for engine, engineIface := range wafInterfaces {
 		fmt.Printf("Running tests for %q engine\n", engine)
 		waf := engineIface
-		engineIface.Init()
-		// read the file as a glob
-		g, err := filepath.Glob(rulesPath)
+		err := engineIface.Init(rulesPath)
 		if err != nil {
 			panic(err)
 		}
-		for _, file := range g {
-			if err := waf.LoadDirectives(file); err != nil {
-				panic(err)
-			}
-		}
 		testfiles, err := os.ReadDir("./tests")
 		if err != nil {
-			log.Fatal(err)
+			panic(err)
 		}
 
 		for _, tc := range testfiles {

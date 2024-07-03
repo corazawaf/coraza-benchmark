@@ -12,13 +12,14 @@ type wafCorazaV2 struct {
 	parser *seclangv2.Parser
 }
 
-func (w *wafCorazaV2) Init() {
+func (w *wafCorazaV2) Init(rulesPath string) (err error) {
 	w.waf = corazav2.NewWaf()
-	w.parser, _ = seclangv2.NewParser(w.waf)
-}
+	w.parser, err = seclangv2.NewParser(w.waf)
+	if err != nil {
+		return err
+	}
 
-func (w *wafCorazaV2) LoadDirectives(path string) error {
-	return w.parser.FromFile(path)
+	return w.parser.FromFile(rulesPath)
 }
 
 func (w *wafCorazaV2) NewTransaction() transactionIface {
@@ -50,11 +51,15 @@ func (tx *txCorazaV2) ProcessRequestHeaders() {
 }
 
 func (tx *txCorazaV2) AppendToRequestBody(data []byte) {
-	tx.transaction.RequestBodyBuffer.Write(data)
+	if _, err := tx.transaction.RequestBodyBuffer.Write(data); err != nil {
+		panic(err)
+	}
 }
 
 func (tx *txCorazaV2) ProcessRequestBody() {
-	tx.transaction.ProcessRequestBody()
+	if _, err := tx.transaction.ProcessRequestBody(); err != nil {
+		panic(err)
+	}
 }
 
 func (tx *txCorazaV2) AddResponseHeader(name string, value string) {
@@ -66,11 +71,15 @@ func (tx *txCorazaV2) ProcessResponseHeaders(statusCode int, status string) {
 }
 
 func (tx *txCorazaV2) AppendToResponseBody(data []byte) {
-	tx.transaction.ResponseBodyBuffer.Write(data)
+	if _, err := tx.transaction.ResponseBodyBuffer.Write(data); err != nil {
+		panic(err)
+	}
 }
 
 func (tx *txCorazaV2) ProcessResponseBody() {
-	tx.transaction.ProcessResponseBody()
+	if _, err := tx.transaction.ProcessResponseBody(); err != nil {
+		panic(err)
+	}
 }
 
 func (tx *txCorazaV2) ProcessLogging() {
@@ -78,7 +87,9 @@ func (tx *txCorazaV2) ProcessLogging() {
 }
 
 func (tx *txCorazaV2) Clean() {
-	tx.transaction.Clean()
+	if err := tx.transaction.Clean(); err != nil {
+		panic(err)
+	}
 }
 
 var _ transactionIface = (*txCorazaV2)(nil)

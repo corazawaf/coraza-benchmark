@@ -5,7 +5,7 @@ go 1.22
 require (
 	github.com/corazawaf/coraza/v2 v2.0.1
 	github.com/corazawaf/coraza/v3 v3.2.1
-	github.com/corazawaf/libinjection-go v0.2.1
+	github.com/corazawaf/libinjection-go v0.2.2
 	github.com/gijsbers/go-pcre v0.0.0-20161214203829-a84f3096ab3c
 	github.com/shirou/gopsutil/v3 v3.24.5
 	github.com/shirou/gopsutil/v4 v4.24.6
